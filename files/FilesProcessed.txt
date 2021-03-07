@@ -1,7 +1,0 @@
-copied ./test-from/movie 1 (1976)
-copied ./test-from/movie 2  (1985)
-copied ./test-from/movie 3 (2020) (copy)
-copied ./test-from/movie 4  (1080)  (1979) (copy)
-copied ./test-from/movie 5  (ahahahah) (1927)
-copied ./test-from/movie 8 (dddddfd) (2020)
-copied ./test-from/movie 9      fkfhkhf fjjjffjj -fdf (1985)
