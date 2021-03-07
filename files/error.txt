@@ -1,0 +1,14 @@
+file ./test-to/1976/movie 1 (1976) exists.
+file ./test-to/1985/movie 2  (1985) exists.
+file ./test-to/2020/movie 3 (2020) (copy) exists.
+file ./test-to/1979/movie 4  (1080)  (1979) (copy) exists.
+file ./test-to/1927/movie 5  (ahahahah) (1927) exists.
+file ./test-to/2020/movie 8 (dddddfd) (2020) exists.
+file ./test-to/1985/movie 9      fkfhkhf fjjjffjj -fdf (1985) exists.
+file ./test-to/1976/movie 1 (1976) exists.
+file ./test-to/1985/movie 2  (1985) exists.
+file ./test-to/2020/movie 3 (2020) (copy) exists.
+file ./test-to/1979/movie 4  (1080)  (1979) (copy) exists.
+file ./test-to/1927/movie 5  (ahahahah) (1927) exists.
+file ./test-to/2020/movie 8 (dddddfd) (2020) exists.
+file ./test-to/1985/movie 9      fkfhkhf fjjjffjj -fdf (1985) exists.
