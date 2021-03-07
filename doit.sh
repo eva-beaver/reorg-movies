@@ -1,5 +1,31 @@
 #!/bin/bash
 
+PASSED=$1
+
+if [ -d "${PASSED}" ] ; then
+    echo "$PASSED is a directory";
+else
+    if [ -f "${PASSED}" ]; then
+        echo "${PASSED} is a file";
+    else
+        echo "${PASSED} is not valid";
+        exit 1
+    fi
+fi
+
+PASSED=$2
+
+if [ -d "${PASSED}" ] ; then
+    echo "$PASSED is a directory";
+else
+    if [ -f "${PASSED}" ]; then
+        echo "${PASSED} is a file";
+    else
+        echo "${PASSED} is not valid";
+        exit 1
+    fi
+fi
+
 ls $1 -xN1 > files.txt
 
 while IFS="" read -r p || [ -n "$p" ]
