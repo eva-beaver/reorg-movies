@@ -1,7 +1,18 @@
 #!/bin/bash
 
-
+# This script will copy all movies from one directory to another and organise by year
+# it assumes the directory name has the year in it like this (xxxx) e.g. (1956)
+#
+# param $1 is from directory
+# param $2 is to directory
+# param $3 set to 1 to acutally copy or 0 to pre-check
+# param $4 is the unquie id for this run
+#
+#                      $1                                 $2             $3 $4
 # ./doit.sh /mnt/share/allmovies/Alphabetical/X /media/eva/Movie-Backup-1 1 X
+
+# Need to add validation for input here
+
 
 PASSED=$1
 
@@ -33,48 +44,63 @@ ls $1 -xN1 > files-$4.txt
 
 while IFS="" read -r p || [ -n "$p" ]
 do
-  found=0
-  for i in {1910..2022}
-  do
 
-    if [[ "$p" == *"($i)"* ]]; then
+    found=0
 
-        from="$1/$p"
-        to="$2/$i/$p"
+    # loop through each year that movie could be 
+    # (I know this is crap can do it with regex if I can work it out, laters....)
+    for i in {1910..2025}
+    do
 
-        if [ ! -d "$2/$i" ] 
-        then
-            echo "Creating Directory $2/$i"
-            mkdir "$2"/"$i"
-        fi
-        
-        if [ -d "$to" ] 
-        then
-            echo "file $to already exists." 
-            echo "file $to exists." >> ErrorExists-$4.txt
-        else
-            echo "coping file $from -> $to "
-            if [ $3 -eq 1 ]
+        if [[ "$p" == *"($i)"* ]]; then
+
+            # set to and from directories
+            from="$1/$p"
+            to="$2/$i/$p"
+
+            # check if year directory exists
+            if [ ! -d "$2/$i" ] 
             then
-                cp -R -- "$from" "$to"
-            else
-                echo "Skipped $from -> $to"
+                echo "Creating Directory $2/$i"
+                mkdir "$2"/"$i"
             fi
-            if [ $? -ne 0 ]
+            
+            # check if destination direct is already there (already copied?)
+            if [ -d "$to" ] 
             then
-                echo "$from" >> Erroroutputfile-$4.txt
+                echo "file $to already exists." 
+                echo "file $to exists." >> ErrorExists-$4.txt
             else
-               echo "copied $from" >> FilesProcessed-$4.txt
-               found=1
-               break 
+                echo "coping file $from -> $to "
+                # is it a test run?
+                if [ $3 -eq 1 ]
+                then
+                    # nope
+                    cp -R -- "$from" "$to"
+                else
+                    # yep
+                    echo "Skipped $from -> $to"
+                fi
+
+                # did we get an error
+                if [ $? -ne 0 ]
+                then
+                    echo "Error copying $from" >> Erroroutputfile-$4.txt
+                else
+                    echo "copied $from" >> FilesProcessed-$4.txt
+                    found=1
+                    break 
+                fi
             fi
         fi
+
+    done
+
+    # did we actuall copy it?
+    if [ $found -ne 1 ]
+    then
+        # nope
+        echo "Not copied $p" >> FilesNOTProcessed-$4.txt
     fi
 
-  done
-
-if [ $found -ne 1 ]
-then
-    echo "copied $p" >> FilesNOTProcessed-$4.txt
-fi
 done < files-$4.txt
