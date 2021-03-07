@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+# ./doit.sh /mnt/share/allmovies/Alphabetical/X /media/eva/Movie-Backup-1 1 X
+
 PASSED=$1
 
 if [ -d "${PASSED}" ] ; then
@@ -26,45 +29,52 @@ else
     fi
 fi
 
-ls $1 -xN1 > files.txt
+ls $1 -xN1 > files-$4.txt
 
 while IFS="" read -r p || [ -n "$p" ]
 do
   found=0
   for i in {1910..2022}
   do
-    # your-unix-command-here
+
     if [[ "$p" == *"($i)"* ]]; then
-        #echo "It's there." $i $p
-        #echo cp -R ./$1/$p ./$2
-        from="./$1/$p"
-        to="./$2/$i/$p"
-        #echo cp -R -- "$from" "$to"
-        if [ ! -d "./$2/$i" ] 
+
+        from="$1/$p"
+        to="$2/$i/$p"
+
+        if [ ! -d "$2/$i" ] 
         then
-            echo "Creating Directory ./$2/$i"
-            mkdir ./"$2"/"$i"
+            echo "Creating Directory $2/$i"
+            mkdir "$2"/"$i"
         fi
+        
         if [ -d "$to" ] 
         then
             echo "file $to already exists." 
-            echo "file $to exists." >> ErrorExists.txt
+            echo "file $to exists." >> ErrorExists-$4.txt
         else
-            echo "coping file $to "
-            cp -R -- "$from" "$to"
+            echo "coping file $from -> $to "
+            if [ $3 -eq 1 ]
+            then
+                cp -R -- "$from" "$to"
+            else
+                echo "Skipped $from -> $to"
+            fi
             if [ $? -ne 0 ]
             then
-                echo "$from" >> Erroroutputfile.txt
+                echo "$from" >> Erroroutputfile-$4.txt
             else
-                echo "copied $from" >> FilesProcessed.txt
+               echo "copied $from" >> FilesProcessed-$4.txt
                found=1
                break 
             fi
         fi
     fi
+
   done
+
 if [ $found -ne 1 ]
 then
-    echo "copied $p" >> FilesNOTProcessed.txt
+    echo "copied $p" >> FilesNOTProcessed-$4.txt
 fi
-done < files.txt
+done < files-$4.txt
