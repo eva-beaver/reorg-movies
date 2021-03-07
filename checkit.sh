@@ -16,7 +16,12 @@ else
     fi
 fi
 
+echo "Starting"
+echo "========================================="
+
 ls $1 -xN1 > files-$2.txt
+
+cnt=0
 
 while IFS="" read -r p || [ -n "$p" ]
 do
@@ -35,8 +40,15 @@ do
 
   done
 
-if [ $found -ne 1 ]
-then
-    echo "Not copied $p" >> FilesNOTProcessed-$2.txt
-fi
+    if [ $found -ne 1 ]
+    then
+        ((cnt=cnt+1))
+        echo "Not copied $p" >> FilesNOTProcessed-$2.txt
+    fi
+
 done < files-$2.txt
+
+echo "========================================="
+echo "Number movie directories with issues $cnt"
+
+echo "Complete"
