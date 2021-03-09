@@ -10,6 +10,7 @@
 #
 #                      $1                                 $2             $3 $4
 # ./doit.sh /mnt/share/allmovies/Alphabetical/X /media/eva/Movie-Backup-1 1 X
+# ./doit.sh /mnt/share/movies/2020-11-November-1/ /media/eva/MovieWork/ 0 20111
 
 # Need to add validation for input here
 
@@ -43,6 +44,7 @@ fi
 echo "Starting"
 echo "========================================="
 
+errcnt=0
 cnt=0
 
 ls $1 -xN1 > files-$4.txt
@@ -63,20 +65,31 @@ do
             from="$1/$p"
             to="$2/$i/$p"
 
+            ((cnt=cnt+1))
+
             # check if year directory exists
             if [ ! -d "$2/$i" ] 
             then
-                echo "Creating Directory $2/$i"
-                mkdir "$2"/"$i"
+                # is it a test run?
+                if [ $3 -eq 1 ]
+                then
+                    # nope
+                    echo "Creating Directory $2/$i"
+                    mkdir "$2"/"$i"
+                fi
             fi
             
             # check if destination direct is already there (already copied?)
             if [ -d "$to" ] 
             then
-                echo "file $to already exists." 
-                echo "file $to exists." >> ErrorExists-$4.txt
+            
+                echo "$cnt >>>>>>>>>>>>>> file $to already exists." 
+                echo "$cnt >>>>>>>>>>>>>> file $to exists." >> ErrorExists-$4.txt
+            
             else
-                echo "coping file $from -> $to "
+
+                echo "$cnt coping file $from -> $to "
+            
                 # is it a test run?
                 if [ $3 -eq 1 ]
                 then
@@ -84,15 +97,15 @@ do
                     cp -R -- "$from" "$to"
                 else
                     # yep
-                    echo "Skipped $from -> $to"
+                    echo "$cnt Skipped $from -> $to"
                 fi
 
                 # did we get an error
                 if [ $? -ne 0 ]
                 then
-                    echo "Error copying $from" >> Erroroutputfile-$4.txt
+                    echo "$cnt Error copying $from" >> Erroroutputfile-$4.txt
                 else
-                    echo "copied $from" >> FilesProcessed-$4.txt
+                    echo "$cnt copied $from" >> FilesProcessed-$4.txt
                     found=1
                     break 
                 fi
@@ -105,13 +118,13 @@ do
     if [ $found -ne 1 ]
     then
         # nope
-        ((cnt=cnt+1))
+        ((errcnt=errcnt+1))
         echo "Not copied $p" >> FilesNOTProcessed-$4.txt
     fi
 
 done < files-$4.txt
 
 echo "========================================="
-echo "Number movie directories with issues $cnt"
+echo "Number movie directories with issues $errcnt"
 
 echo "Complete"

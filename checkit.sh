@@ -1,7 +1,8 @@
 #!/bin/bash
 
 
-# ./doit.sh /mnt/share/allmovies/Alphabetical/X X
+# ./checkit.sh /mnt/share/allmovies/Alphabetical/X X
+# ./checkit.sh /mnt/share/movies/2021-01-January-1/ xx
 
 PASSED=$1
 
@@ -21,7 +22,7 @@ echo "========================================="
 
 ls $1 -xN1 > files-$2.txt
 
-cnt=0
+errcnt=0
 
 while IFS="" read -r p || [ -n "$p" ]
 do
@@ -42,13 +43,13 @@ do
 
     if [ $found -ne 1 ]
     then
-        ((cnt=cnt+1))
-        echo "Not copied $p" >> FilesNOTProcessed-$2.txt
+        ((errcnt=errcnt+1))
+        echo "No year found $p" >> FilesNOTProcessed-$2.txt
     fi
 
 done < files-$2.txt
 
 echo "========================================="
-echo "Number movie directories with issues $cnt"
+echo "Number movie directories with issues $errcnt"
 
 echo "Complete"
