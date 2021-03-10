@@ -46,6 +46,7 @@ echo "========================================="
 
 errcnt=0
 cnt=0
+dups=0
 
 ls $1 -xN1 > files-$4.txt
 
@@ -85,7 +86,8 @@ do
             
                 echo "$cnt >>>>>>>>>>>>>> file $to already exists." 
                 echo "$cnt >>>>>>>>>>>>>> file $to exists." >> ErrorExists-$4.txt
-            
+                ((dups=dups+1))
+           
             else
 
                 echo "$cnt coping file $from -> $to "
@@ -125,6 +127,7 @@ do
 done < files-$4.txt
 
 echo "========================================="
+echo "Number movie directories that already exist $dups"
 echo "Number movie directories with issues $errcnt"
 
 echo "Complete"
