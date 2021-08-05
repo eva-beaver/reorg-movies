@@ -121,7 +121,9 @@ do
     then
         # nope
         ((errcnt=errcnt+1))
+        echo "Not copied $p"
         echo "Not copied $p" >> FilesNOTProcessed-$4.txt
+        found=0
     fi
 
 done < files-$4.txt
