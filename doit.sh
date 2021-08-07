@@ -65,6 +65,7 @@ do
             # set to and from directories
             from="$1/$p"
             to="$2/$i/$p"
+            #to="$2/$i/$p [Red]"
 
             ((cnt=cnt+1))
 
