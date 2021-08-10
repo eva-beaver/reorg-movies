@@ -12,6 +12,8 @@
 # ./doit.sh /mnt/share/allmovies/Alphabetical/X /media/eva/Movie-Backup-1 1 X
 # ./doit.sh /mnt/share/movies/2020-11-November-1/ /media/eva/MovieWork/ 0 20111
 
+# sudo mount.cifs //192.168.1.130/downloadedmovies /mnt/share/movies -o user=xxx,pass=xxx
+
 # Need to add validation for input here
 
 
@@ -65,6 +67,7 @@ do
             # set to and from directories
             from="$1/$p"
             to="$2/$i/$p"
+            #to="$2/$i/$p [Red]"
 
             ((cnt=cnt+1))
 
