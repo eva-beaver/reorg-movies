@@ -45,6 +45,7 @@ do
     then
         ((errcnt=errcnt+1))
         echo "No year found $p" >> FilesNOTProcessed-$2.txt
+        echo "No year found $p"
     fi
 
 done < files-$2.txt
