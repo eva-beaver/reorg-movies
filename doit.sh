@@ -59,7 +59,7 @@ do
 
     # loop through each year that movie could be 
     # (I know this is crap can do it with regex if I can work it out, laters....)
-    for i in {1910..2025}
+    for i in {1900..2025}
     do
 
         if [[ "$p" == *"($i)"* ]]; then
