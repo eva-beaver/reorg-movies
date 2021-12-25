@@ -14,18 +14,24 @@
 
 # sudo mount.cifs //192.168.1.130/downloadedmovies /mnt/share/movies -o user=xxx,pass=xxx
 
+logDir="./log"
+fileDir="./files"
+
+echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+
 # Need to add validation for input here
 
 
 PASSED=$1
 
 if [ -d "${PASSED}" ] ; then
-    echo "$PASSED is a directory";
+    echo "$PASSED source is a directory";
 else
     if [ -f "${PASSED}" ]; then
-        echo "${PASSED} is a file";
+        echo "${PASSED} source is a file";
+        exit 1
     else
-        echo "${PASSED} is not valid";
+        echo "${PASSED} source is not valid";
         exit 1
     fi
 fi
@@ -33,14 +39,32 @@ fi
 PASSED=$2
 
 if [ -d "${PASSED}" ] ; then
-    echo "$PASSED is a directory";
+    echo "$PASSED target is a directory";
 else
     if [ -f "${PASSED}" ]; then
-        echo "${PASSED} is a file";
+        echo "${PASSED} target is a file";
+        exit 1
     else
-        echo "${PASSED} is not valid";
+        echo "${PASSED} target is not valid";
         exit 1
     fi
+fi
+
+echo "Source Directory is valid [$1]"
+echo "Target Directory is valid [$2]"
+
+if [ -d "${logDir}" ] ; then
+    echo "$logDir directory exists";
+else
+    echo "$logDir does exist, creating";
+    mkdir $logDir
+fi
+
+if [ -d "${fileDir}" ] ; then
+    echo "$fileDir directory exists";
+else
+    echo "$fileDir does exist, creating";
+    mkdir $fileDir
 fi
 
 echo "Starting"
@@ -136,3 +160,4 @@ echo "Number movie directories that already exist $dups"
 echo "Number movie directories with issues $errcnt"
 
 echo "Complete"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
