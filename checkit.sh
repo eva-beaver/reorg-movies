@@ -4,6 +4,26 @@
 # ./checkit.sh /mnt/share/allmovies/Alphabetical/X X
 # ./checkit.sh /mnt/share/movies/2021-01-January-1/ xx
 
+UNIQID=$2
+
+logDir="./log"
+fileDir="./files"
+
+#////////////////////////////////
+function _writeLog {
+
+    echo $1
+    echo $1 >> ./log/checkit-log-$UNIQID.txt
+
+}
+
+#////////////////////////////////
+function _writeErrorLog {
+
+    echo $1 >> ./log/checkit-error-movies-$UNIQID.txt
+
+}
+
 PASSED=$1
 
 if [ -d "${PASSED}" ] ; then
@@ -15,6 +35,22 @@ else
         echo "${PASSED} is not valid";
         exit 1
     fi
+fi
+
+# Check files directory
+if [ -d "${logDir}" ] ; then
+    echo "$logDir directory exists";
+else
+    echo "$logDir does exist, creating";
+    mkdir $logDir
+fi
+
+# Check log directory
+if [ -d "${fileDir}" ] ; then
+    echo "$fileDir directory exists";
+else
+    echo "$fileDir does exist, creating";
+    mkdir $fileDir
 fi
 
 echo "Starting"

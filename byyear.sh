@@ -1,5 +1,7 @@
 #!/bin/bash
 
+###################### NOT USED
+
 # This script will copy all movies from one directory to another and organise by year
 # it assumes the directory name has the year in it like this (xxxx) e.g. (1956)
 #

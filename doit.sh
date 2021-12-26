@@ -14,13 +14,29 @@
 
 # sudo mount.cifs //192.168.1.130/downloadedmovies /mnt/share/movies -o user=xxx,pass=xxx
 
+UNIQID=$4
+
 logDir="./log"
 fileDir="./files"
+
+#////////////////////////////////
+function _writeLog {
+
+    echo $1
+    echo $1 >> ./log/doit-log-$UNIQID.txt
+
+}
+
+#////////////////////////////////
+function _writeErrorLog {
+
+    echo $1 >> ./log/doit-error-movies-$UNIQID.txt
+
+}
 
 echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
 
 # Need to add validation for input here
-
 
 PASSED=$1
 
@@ -53,6 +69,7 @@ fi
 echo "Source Directory is valid [$1]"
 echo "Target Directory is valid [$2]"
 
+# Check files directory
 if [ -d "${logDir}" ] ; then
     echo "$logDir directory exists";
 else
@@ -60,6 +77,7 @@ else
     mkdir $logDir
 fi
 
+# Check log directory
 if [ -d "${fileDir}" ] ; then
     echo "$fileDir directory exists";
 else

@@ -1,16 +1,17 @@
 #!/bin/bash
 
-# This script will copy all movies from one directory to another and organise by year
-# it assumes the directory name has the year in it like this (xxxx) e.g. (1956)
+# This script will copy all movies from one directory to another and organised by year 
+# across 3 target directories for use by plex
+# it assumes the directory name has the year in it only this xxxx e.g. 1956
 #
 # param $1 is from directory
 # param $2 is the unquie id for this run for log
 # param $3 set to 1 to acutally copy or 0 to pre-check
 #
-#                      $1                                 $2             $3 $4
-# ./copyit.sh ./test-from-year
-# ./copyit.sh /mnt/share/allmovies/Alphabetical/X /media/eva/Movie-Backup-1 1 X
-# ./copyit.sh /mnt/share/movies/2020-11-November-1/ /media/eva/MovieWork/ 0 20111
+#                      $1          $2  $3 
+# ./publishit.sh ./test-from-year test 1
+
+# ./publishit.sh /media/downloads/byyear-2021-11-01 20211101 1
 
 # sudo mount.cifs //192.168.1.130/downloadedmovies /mnt/share/movies -o user=xxx,pass=xxx
 
@@ -22,13 +23,15 @@ UNIQID=$2
 logDir="./log"
 fileDir="./files"
 
-#targetDrive1="/media/eva/MovieMaster2"
+# Live
+#targetDrive1="/mnt/share/movies"
+#targetDrive2="/mnt/share/movies"
+#targetDrive3="/mnt/share/movies"
 
-
+# Testing
 targetDrive1="./test-byyear/MovieMaster1"
 targetDrive2="./test-byyear/MovieMaster2"
 targetDrive3="./test-byyear/MovieMaster3"
-targetDrive4="./test-byyear/MovieMaster4"
 
 targetDrive=""
 
@@ -42,16 +45,12 @@ function _calcTargetDrive {
             targetDrive=$targetDrive1
             return 
         fi
-        if [[ "$1" -le 2012 ]]; then
+        if [[ "$1" -le 2005 ]]; then
             targetDrive=$targetDrive2
             return
         fi
-        if [[ "$1" -le 2018 ]]; then
-            targetDrive=$targetDrive3
-            return
-        fi
         if [[ "$1" -le 2025 ]]; then
-            targetDrive=$targetDrive4
+            targetDrive=$targetDrive3
             return
         fi
     else
@@ -64,14 +63,14 @@ function _calcTargetDrive {
 function _writeLog {
 
     echo $1
-    echo $1 >> ./log/copyit-log-$UNIQID.txt
+    echo $1 >> ./log/publishit-log-$UNIQID.txt
 
 }
 
 #////////////////////////////////
 function _writeErrorLog {
 
-    echo $1 >> ./log/copyit-error-movies-$UNIQID.txt
+    echo $1 >> ./log/publishit-error-movies-$UNIQID.txt
 
 }
 
@@ -161,6 +160,7 @@ else
     fi
 fi
 
+# Check files directory
 if [ -d "${logDir}" ] ; then
     echo "$logDir directory exists";
 else
@@ -168,6 +168,7 @@ else
     mkdir $logDir
 fi
 
+# Check log directory
 if [ -d "${fileDir}" ] ; then
     echo "$fileDir directory exists";
 else

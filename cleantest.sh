@@ -1,7 +1,9 @@
 rm -r test-to
 mkdir test-to
 rm -r files
+mkdir files
 rm -r log
+mkdir log
 rm -r ./test-byyear/MovieMaster1
 mkdir ./test-byyear/MovieMaster1
 rm -r ./test-byyear/MovieMaster2
