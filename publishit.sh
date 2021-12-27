@@ -24,14 +24,14 @@ logDir="./log"
 fileDir="./files"
 
 # Live
-#targetDrive1="/mnt/share/movies"
-#targetDrive2="/mnt/share/movies"
-#targetDrive3="/mnt/share/movies"
+targetDrive1="/mnt/share/movies1/ByYear"
+targetDrive2="/mnt/share/movies2/ByYear"
+targetDrive3="/mnt/share/movies3/ByYear"
 
 # Testing
-targetDrive1="./test-byyear/MovieMaster1"
-targetDrive2="./test-byyear/MovieMaster2"
-targetDrive3="./test-byyear/MovieMaster3"
+#targetDrive1="./test-byyear/MovieMaster1"
+#targetDrive2="./test-byyear/MovieMaster2"
+#targetDrive3="./test-byyear/MovieMaster3"
 
 targetDrive=""
 

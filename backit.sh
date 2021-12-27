@@ -19,21 +19,24 @@ echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
 
 INPUTDIR=$1
 UNIQID=$2
+totalCnt=0
+totalCPCnt=0
+totalErrCnt=0
 
 logDir="./log"
 fileDir="./files"
 
 # Live
-#targetDrive1="/media/eva/MovieMaster1"
-#targetDrive1="/media/eva/MovieMaster2"
-#targetDrive1="/media/eva/MovieMaster3"
-#targetDrive1="/media/eva/MovieMaster4"
+targetDrive1="/media/eva/MovieMaster1"
+targetDrive2="/media/eva/MovieMaster2"
+targetDrive3="/media/eva/MovieMaster3"
+targetDrive4="/media/eva/MovieMaster4"
 
 # Testing
-targetDrive1="./test-byyear/MovieMaster1"
-targetDrive2="./test-byyear/MovieMaster2"
-targetDrive3="./test-byyear/MovieMaster3"
-targetDrive4="./test-byyear/MovieMaster4"
+#targetDrive1="./test-byyear/MovieMaster1"
+#targetDrive2="./test-byyear/MovieMaster2"
+#targetDrive3="./test-byyear/MovieMaster3"
+#targetDrive4="./test-byyear/MovieMaster4"
 
 targetDrive=""
 
@@ -47,7 +50,7 @@ function _calcTargetDrive {
             targetDrive=$targetDrive1
             return 
         fi
-        if [[ "$1" -le 2012 ]]; then
+        if [[ "$1" -le 2010 ]]; then
             targetDrive=$targetDrive2
             return
         fi
@@ -98,9 +101,10 @@ function _processMoviesForYear {
     do
  
         ((cnt=cnt+1))
+        ((totalCnt=totalCnt+1))
 
         _writeLog "____."
-        _writeLog "____>>>> Processing movie #$cnt $s"
+        _writeLog "____>>>> Processing movie #$cnt $s - ($totalCnt [$totalCPCnt])"
 
         _calcTargetDrive $1
 
@@ -131,10 +135,12 @@ function _processMoviesForYear {
             if [ $? -eq 0 ]; then
                 _writeLog "____Copied $s to $copyMovieTo";
                 ((movieCnt=movieCnt+1))
+                ((totalCPCnt=totalCPCnt+1))
             else
                 _writeLog "****Error Copied failed for $s";
                 _writeErrorLog "Error $copMovieFrom"
                 ((errCnt=errCnt+1))
+                ((totalErrCnt=totalErrCnt+1))
             fi
         fi
 
@@ -215,6 +221,9 @@ done < ./files/files-$2-year.txt
 _writeLog "========================================="
 _writeLog "Number of movie year directories $yearcnt"
 _writeLog "Number of movie directories with issues $errcnt"
+_writeLog "Total number movies processed $totalCnt"
+_writeLog "Total number movies Copied $totalCPCnt"
+_writeLog "Total number movies with errors $totalErrCnt"
 _writeLog "========================================="
 
 _writeLog "Complete"
