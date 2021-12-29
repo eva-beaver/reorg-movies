@@ -85,14 +85,14 @@ else
     mkdir $fileDir
 fi
 
-echo "Starting"
-echo "========================================="
+_writeLog "Starting"
+_writeLog "========================================="
 
 errcnt=0
 cnt=0
 dups=0
 
-ls $1 -xN1 > files-$4.txt
+ls $1 -xN1 > ./files/files-$4.txt
 
 while IFS="" read -r p || [ -n "$p" ]
 do
@@ -120,7 +120,7 @@ do
                 if [ $3 -eq 1 ]
                 then
                     # nope
-                    echo "Creating Directory $2/$i"
+                    _writeLog "Creating Directory $2/$i"
                     mkdir "$2"/"$i"
                 fi
             fi
@@ -129,13 +129,13 @@ do
             if [ -d "$to" ] 
             then
             
-                echo "$cnt >>>>>>>>>>>>>> file $to already exists." 
-                echo "$cnt >>>>>>>>>>>>>> file $to exists." >> ErrorExists-$4.txt
+                _writeErrorLog "$cnt >>>>>>>>>>>>>> file $to already exists." 
+                echo "$cnt >>>>>>>>>>>>>> file $to exists." >> ./files/ErrorExists-$4.txt
                 ((dups=dups+1))
            
             else
 
-                echo "$cnt coping file $from -> $to "
+                _writeLog "$cnt coping file $from -> $to "
             
                 # is it a test run?
                 if [ $3 -eq 1 ]
@@ -144,15 +144,15 @@ do
                     cp -R -- "$from" "$to"
                 else
                     # yep
-                    echo "$cnt Skipped $from -> $to"
+                    _writeLog "Check mode $cnt Skipped $from -> $to"
                 fi
 
                 # did we get an error
                 if [ $? -ne 0 ]
                 then
-                    echo "$cnt Error copying $from" >> Erroroutputfile-$4.txt
+                    _writeErrorLog "$cnt Error copying $from" >> Erroroutputfile-$4.txt
                 else
-                    echo "$cnt copied $from" >> FilesProcessed-$4.txt
+                    echo "$cnt copied $from" >> ./files/FilesProcessed-$4.txt
                     found=1
                     break 
                 fi
@@ -166,16 +166,18 @@ do
     then
         # nope
         ((errcnt=errcnt+1))
-        echo "Not copied $p"
-        echo "Not copied $p" >> FilesNOTProcessed-$4.txt
+        _writeErrorLog "Not copied $p"
+        echo "Not copied $p" >> ./files/FilesNOTProcessed-$4.txt
         found=0
     fi
 
-done < files-$4.txt
+done < ./files/files-$4.txt
 
-echo "========================================="
-echo "Number movie directories that already exist $dups"
-echo "Number movie directories with issues $errcnt"
+_writeLog "========================================="
+_writeLog "Number movie directories processed $cnt"
+_writeLog "#########################################"
+_writeLog "Number movie directories that already exist $dups"
+_writeLog "Number movie directories with issues $errcnt"
 
-echo "Complete"
-echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+_writeLog "Complete"
+_writeLog ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
