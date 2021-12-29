@@ -2,12 +2,13 @@
 
 Move a directory of movies to a directory of the same name without the extension
 
-# ./moveit.sh /mnt/share/allmovies/backup-3/X 1 0000 [Red]
-# ./moveit.sh /mnt/share/movies/2021-01-January-1/ 1 0000 [Red]
+# ./moveit.sh /mnt/share/allmovies/backup-3/X 0000 [Red]
+# ./moveit.sh /mnt/share/movies/2021-01-January-1/ 0000 [Red]
+# sudo ./moveit.sh /mnt/share/backup-3/Movies12 0000 [Red]
 
 # sudo mount.cifs //192.168.1.130/backup-3 /mnt/share/backup-3/ -o user=xxx,pass=xxx
 
-UNIQID=$3
+UNIQID=$2
 
 logDir="./log"
 fileDir="./files"
@@ -77,7 +78,7 @@ do
 
     dirName=${p::-4}
 
-    fullDir=$1/$dirName" $4"
+    fullDir=$1/$dirName" $3"
 
     #echo $fullDir
     #exit 0
