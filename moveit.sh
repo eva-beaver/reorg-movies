@@ -1,5 +1,6 @@
 #!/bin/bash
 
+Move a directory of movies to a directory of the same name without the extension
 
 # ./moveit.sh /mnt/share/allmovies/backup-3/X 1 0000 [Red]
 # ./moveit.sh /mnt/share/movies/2021-01-January-1/ 1 0000 [Red]
