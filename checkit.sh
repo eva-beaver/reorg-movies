@@ -53,13 +53,12 @@ else
     mkdir $fileDir
 fi
 
-echo "Starting"
-echo "========================================="
+_writeLog "Starting"
+_writeLog "========================================="
+
+ls $1 -xN1 > ./files/files-$2.txt
 
 cnt=0
-
-ls $1 -xN1 > files-$2.txt
-
 errcnt=0
 
 while IFS="" read -r p || [ -n "$p" ]
@@ -85,15 +84,16 @@ do
     if [ $found -ne 1 ]
     then
         ((errcnt=errcnt+1))
-        echo "No year found $p" >> FilesNOTProcessed-$2.txt
-        echo "No year found $p"
+        _writeLog "No year found $p" >> FilesNOTProcessed-$2.txt
+        _writeLog "No year found $p"
     fi
 
-done < files-$2.txt
+done < ./files/files-$2.txt
 
-echo "========================================="
-echo "Number of movie directories $cnt"
-echo "Number of movie directories with issues $errcnt"
-echo "========================================="
+_writeLog "========================================="
+_writeLog "Number of movie directories $cnt"
+_writeLog "#########################################"
+_writeLog "Number of movie directories with issues $errcnt"
+_writeLog "========================================="
 
-echo "Complete"
+_writeLog "Complete"
