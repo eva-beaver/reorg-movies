@@ -1,14 +1,18 @@
 #!/bin/bash
 
-Move a directory of movies to a directory of the same name without the extension
+# This script will move all movies from one directory to another.
+#
+# param $1 is from directory
+# param $2 is to directory
+# param $3 is the unquie id for this run
+#
+#                      $1                                 $2                       $3 
+# ./moveit.sh /mnt/share/allmovies/Alphabetical/X     /media/eva/Movie-Backup-1    X
+# ./moveit.sh /mnt/share/movies/2020-11-November-1/   /media/eva/MovieWork/        20111
 
-# ./moveit.sh /mnt/share/allmovies/backup-3/X 0000 [Red]
-# ./moveit.sh /mnt/share/movies/2021-01-January-1/ 0000 [Red]
-# sudo ./moveit.sh /mnt/share/backup-3/Movies12 0000 [Red]
+# sudo mount.cifs //192.168.1.130/downloadedmovies /mnt/share/movies -o user=xxx,pass=xxx
 
-# sudo mount.cifs //192.168.1.130/backup-3 /mnt/share/backup-3/ -o user=xxx,pass=xxx
-
-UNIQID=$2
+UNIQID=$3
 
 logDir="./log"
 fileDir="./files"
@@ -24,22 +28,44 @@ function _writeLog {
 #////////////////////////////////
 function _writeErrorLog {
 
-    echo $1 >> ./log/moveit-error-$UNIQID.txt
+    echo $1 >> ./log/moveit-error-movies-$UNIQID.txt
 
 }
+
+echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+
+# Need to add validation for input here
 
 PASSED=$1
 
 if [ -d "${PASSED}" ] ; then
-    echo "$PASSED is a directory";
+    echo "$PASSED source is a directory";
 else
     if [ -f "${PASSED}" ]; then
-        echo "${PASSED} is a file";
+        echo "${PASSED} source is a file";
+        exit 1
     else
-        echo "${PASSED} is not valid";
+        echo "${PASSED} source is not valid";
         exit 1
     fi
 fi
+
+PASSED=$2
+
+if [ -d "${PASSED}" ] ; then
+    echo "$PASSED target is a directory";
+else
+    if [ -f "${PASSED}" ]; then
+        echo "${PASSED} target is a file";
+        exit 1
+    else
+        echo "${PASSED} target is not valid";
+        exit 1
+    fi
+fi
+
+echo "Source Directory is valid [$1]"
+echo "Target Directory is valid [$2]"
 
 # Check files directory
 if [ -d "${logDir}" ] ; then
@@ -60,66 +86,49 @@ fi
 _writeLog "Starting"
 _writeLog "========================================="
 
-# get only file names
-ls $1 -phxN1 | grep -v / > ./files/files-tomove-$3.txt
-
-dirCnt=0
-movCnt=0
-existCnt=0
 errCnt=0
-cnt=0
+cpCnt=0
+existCnt=0
+
+ls $1 -xN1 > ./files/files-$4.txt
 
 while IFS="" read -r p || [ -n "$p" ]
 do
-  
+
     found=0
+
+    # set to and from directories
+    from="$1/$p"
+    to="$2/$p"
 
     ((cnt=cnt+1))
 
-    dirName=${p::-4}
-
-    fullDir=$1/$dirName" $3"
-
-    #echo $fullDir
-    #exit 0
-
     # Check if movie directory already exists
-    if [ -d "${fullDir}" ] ; then
-        _writeLog "****$fullDir directory exists";
+    if [ -d "${to}" ] ; then
+        _writeLog ">>>>$to directory exists will refresh";
         ((existCnt=existCnt+1))
-        _writeErrorLog "Already a directory $fullDir"
-    else
-        _writeLog ">>>>$fullDir does not exist, creating";
-        mkdir "$fullDir"
-        if [ $? -eq 0 ]; then
-            _writeLog "____Created $fullDir";
-            ((dirCnt=dirCnt+1))
-            _writeLog "____moving to $fullDir";
-            mv "$1/$p" "$fullDir"
-            if [ $? -eq 0 ]; then
-                _writeLog "____Moved $p";
-                ((movCnt=movCnt+1))
-            else
-                _writeLog "****Error moving file $p";
-                _writeErrorLog "Error $p"
-                ((errCnt=errCnt+1))
-            fi
-        else
-            _writeLog "****Error directory create failed for $fullDir";
-            _writeErrorLog "Error $p"
-            ((errCnt=errCnt+1))
-        fi
+        _writeErrorLog "Already a directory $to refreshing"
     fi
 
-done < ./files/files-tomove-$3.txt
+    _writeLog "____coping to $to";
+    mv -u "$from" "$to"
+    if [ $? -eq 0 ]; then
+        _writeLog "____Copied $from";
+        ((cpCnt=cpCnt+1))
+    else
+        _writeLog "****Error coping file $from";
+        _writeErrorLog "Error $frm"
+        ((errCnt=errCnt+1))
+    fi
+
+done < ./files/files-$4.txt
 
 _writeLog "========================================="
-_writeLog "Number of input movies $cnt"
-_writeLog "Number of directories created $dirCnt"
-_writeLog "Number of movies moved $movCnt"
+_writeLog "Number movie directories processed $cnt"
+_writeLog "Number movie directories copied $cpCnt"
 _writeLog "#########################################"
-_writeLog "Number of directories with issues $existCnt"
-_writeLog "Number of movie directories with issues $errCnt"
-_writeLog "========================================="
+_writeLog "Number movie directories that already existed $existCnt"
+_writeLog "Number movie directories with issues $errCnt"
 
 _writeLog "Complete"
+_writeLog ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
