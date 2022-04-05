@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script will copy all movies from one directory to another and organised by year 
-# across 4 target directories for backup
+# across 5 target directories for backup
 # it assumes the directory name has the year in it only this xxxx e.g. 1956
 #
 # param $1 is from directory
@@ -22,6 +22,7 @@ UNIQID=$2
 totalCnt=0
 totalCPCnt=0
 totalErrCnt=0
+totalExistCnt=0
 
 logDir="./log"
 fileDir="./files"
@@ -31,12 +32,16 @@ targetDrive1="/media/eva/MovieMaster1"
 targetDrive2="/media/eva/MovieMaster2"
 targetDrive3="/media/eva/MovieMaster3"
 targetDrive4="/media/eva/MovieMaster4"
+targetDrive5="/media/eva/MovieMaster5"
+targetDrive6="/media/eva/MovieMaster6"
 
 # Testing
 #targetDrive1="./test-byyear/MovieMaster1"
 #targetDrive2="./test-byyear/MovieMaster2"
 #targetDrive3="./test-byyear/MovieMaster3"
 #targetDrive4="./test-byyear/MovieMaster4"
+#targetDrive5="./test-byyear/MovieMaster5"
+#targetDrive6="./test-byyear/MovieMaster6"
 
 targetDrive=""
 
@@ -46,20 +51,28 @@ function _calcTargetDrive {
     targetDrive=""
 
     if [[ "$1" -ge 1900 ]]; then
-        if [[ "$1" -le 1985 ]]; then
+        if [[ "$1" -le 1980 ]]; then
             targetDrive=$targetDrive1
             return 
         fi
-        if [[ "$1" -le 2010 ]]; then
+        if [[ "$1" -le 2005 ]]; then
             targetDrive=$targetDrive2
             return
         fi
-        if [[ "$1" -le 2018 ]]; then
+        if [[ "$1" -le 2014 ]]; then
             targetDrive=$targetDrive3
             return
         fi
-        if [[ "$1" -le 2025 ]]; then
+        if [[ "$1" -le 2018 ]]; then
             targetDrive=$targetDrive4
+            return
+        fi
+        if [[ "$1" -le 2020 ]]; then
+            targetDrive=$targetDrive5
+            return
+        fi
+        if [[ "$1" -le 2025 ]]; then
+            targetDrive=$targetDrive6
             return
         fi
     else
@@ -128,6 +141,7 @@ function _processMoviesForYear {
         if [ -d "${copyMovieTo}" ] ; then
             _writeLog "****$copyMovieTo directory exists";
             ((existCnt=existCnt+1))
+            ((totalExistCnt=totalExistCnt+1))
             _writeErrorLog "Duplicate $copMovieFrom"
         else
             _writeLog "____>>$copyMovieTo does not exist, copying";
@@ -223,6 +237,7 @@ _writeLog "Number of movie year directories $yearcnt"
 _writeLog "Number of movie directories with issues $errcnt"
 _writeLog "Total number movies processed $totalCnt"
 _writeLog "Total number movies Copied $totalCPCnt"
+_writeLog "Total number movies Existing $totalExistCnt"
 _writeLog "Total number movies with errors $totalErrCnt"
 _writeLog "========================================="
 

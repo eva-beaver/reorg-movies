@@ -35,6 +35,11 @@ targetDrive3="/mnt/share/movies3/ByYear"
 
 targetDrive=""
 
+totMovieCnt=0
+totExistCnt=0
+totErrCnt=0
+
+
 #////////////////////////////////
 function _calcTargetDrive {
 
@@ -118,6 +123,7 @@ function _processMoviesForYear {
         if [ -d "${copyMovieTo}" ] ; then
             _writeLog "****$copyMovieTo directory exists";
             ((existCnt=existCnt+1))
+            ((totExistCnt=totExistCnt+1))
             _writeErrorLog "Duplicate $copMovieFrom"
         else
             _writeLog "____>>$copyMovieTo does not exist, copying";
@@ -125,10 +131,12 @@ function _processMoviesForYear {
             if [ $? -eq 0 ]; then
                 _writeLog "____Copied $s to $copyMovieTo";
                 ((movieCnt=movieCnt+1))
+                ((totMovieCnt=totMovieCnt+1))
             else
                 _writeLog "****Error Copied failed for $s";
                 _writeErrorLog "Error $copMovieFrom"
                 ((errCnt=errCnt+1))
+                ((totErrCnt=totErrCnt+1))
             fi
         fi
 
@@ -210,6 +218,11 @@ _writeLog "========================================="
 _writeLog "Number of movie year directories $yearcnt"
 _writeLog "Number of movie directories with issues $errcnt"
 _writeLog "========================================="
+_writeLog "$totMovieCnt movies copied"
+_writeLog "$totExistCnt movies already existed"
+_writeLog "$totErrCnt errors"
+_writeLog "========================================="
+_writeLog "."
 
 _writeLog "Complete"
 _writeLog ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"

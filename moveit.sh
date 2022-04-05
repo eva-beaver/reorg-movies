@@ -110,13 +110,13 @@ do
         _writeErrorLog "Already a directory $to refreshing"
     fi
 
-    _writeLog "____coping to $to";
+    _writeLog "____Moving to $to";
     mv -u "$from" "$to"
     if [ $? -eq 0 ]; then
-        _writeLog "____Copied $from";
+        _writeLog "____Moved $from";
         ((cpCnt=cpCnt+1))
     else
-        _writeLog "****Error coping file $from";
+        _writeLog "****Error moving file $from";
         _writeErrorLog "Error $frm"
         ((errCnt=errCnt+1))
     fi
@@ -125,7 +125,7 @@ done < ./files/files-$4.txt
 
 _writeLog "========================================="
 _writeLog "Number movie directories processed $cnt"
-_writeLog "Number movie directories copied $cpCnt"
+_writeLog "Number movie directories moved $cpCnt"
 _writeLog "#########################################"
 _writeLog "Number movie directories that already existed $existCnt"
 _writeLog "Number movie directories with issues $errCnt"
